@@ -9,7 +9,7 @@ import problem.IDPCNDU;
 public class Individual {
 	private ArrayList<NodeDepth> chromosome;
 	private int fitness;
-
+	private int skill_factor;
 	public Individual() {
 
 	}
@@ -55,7 +55,13 @@ public class Individual {
 	public void setFitness(int fitness) {
 		this.fitness = fitness;
 	}
+	public int getskillfactor() {
+		return skill_factor;
+	}
 
+	public void setskillfactor(int skill_factor) {
+		this.skill_factor = skill_factor;
+	}
 	private void DFSUtil(int v, boolean[] visited, int[] depth, int depthOfV, ArrayList<NodeDepth> rs, ArrayList<ArrayList<Integer>> T) {
 		visited[v] = true;
 		depth[v] = depthOfV;
@@ -69,7 +75,7 @@ public class Individual {
 		}
 	}
 	
-	
+
 	public ArrayList<NodeDepth> DFS(ArrayList<ArrayList<Integer>> T) {
 		boolean[] visited = new boolean[T.size()];
 		int[] depth = new int[T.size()];
@@ -121,29 +127,65 @@ public class Individual {
 		return T;
 	}
 	
-
 	// tra ve duong di lien mien
+	
 	public ArrayList<Integer> decode(IDPCNDU task) {
 		ArrayList<Integer> path = new ArrayList<>();
+		ArrayList<NodeDepth> u = new ArrayList<>();
+		for(NodeDepth x : chromosome)
+			u.add(new NodeDepth(x));
 
+		ArrayList<NodeDepth> tree = new ArrayList<>();
+		int[] visited = new int[chromosome.size()];
+		Arrays.fill(visited, 0);
+		tree.add(u.get(0));
+		visited[0] = 1;
+		while(Arrays.stream(visited).sum() != u.size()){
+			// for(int idx = 0;idx<chromosome.size();idx++){
+			// 	System.out.print(visited[idx]+ " ");
+			// }
+			// System.out.println();
+			for(int j =1;j<u.size();j++){
+				if(visited[j] == 1)
+					continue;
+				NodeDepth x = u.get(j);
+				if(x.getNode() > task.getNumberOfDomains()){
+					visited[j] =1;
+					continue;
+				}
+				for(int k = tree.size()-1;k>=0;k--){
+					NodeDepth y = tree.get(k);
+					if(y.getDepth() < x.getDepth() && task.adjDomain.get(y.getNode()).contains(x.getNode())){
+						tree.add(k+1,new NodeDepth(x.getNode(),y.getDepth()+1));
+						visited[j] = 1;
+						break;
+					}
+				}
+				if(visited[j] == 0)
+					u.get(j).setDepth(u.get(j).getDepth()+1);
+
+			}
+		}
+		// if(task.getNumberOfDomains() == 10){
+		// 	System.out.println(tree);
+		// }
 		// find the destination domain
+		// tree = chromosome;
 		NodeDepth p = new NodeDepth(0, 0);
 		int i;
-		for(i = chromosome.size()-1; i >= 0; i--) {
-			if(chromosome.get(i).getNode() == task.getNumberOfDomains()) {
+		for(i = tree.size()-1; i >= 0; i--) {
+			if(tree.get(i).getNode() == task.getNumberOfDomains()) {
 				path.add(task.getNumberOfDomains());
-				p = chromosome.get(i);
+				p = tree.get(i);
 				break;
 			}
 		}
-		// find the path from destination domain <-... <- source domain
 		for(int j = i-1; j >= 0; j--) {
-			if(chromosome.get(j).getDepth() < p.getDepth()) {
-				p = chromosome.get(j);
+			if(tree.get(j).getDepth() < p.getDepth()) {
+				p = tree.get(j);
 				path.add(p.getNode());
 			}
 		}
-
 		// reverse: source domain -> ... -> destination domain
 		Collections.reverse(path);
 

@@ -42,7 +42,7 @@ public class GA {
 	public Individual run(int seed) throws IOException {
 		long t1 = System.currentTimeMillis();
 		Population population = new Population(task);
-		population.initPopulation(); // init and update fitness
+		population.initPopulation(Configs.POPULATION_SIZE,task.adjDomain); // init and update fitness
 		population.updateBestIndividual();
 //		System.out.println("Init Population, Start Distance: " + (-population.getBestIndividual().getFitness()));
 		int generation = 0;

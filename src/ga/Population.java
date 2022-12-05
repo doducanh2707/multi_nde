@@ -17,12 +17,11 @@ public class Population {
 		this.task = task;
 	}
 
-	public void initPopulation() {
+	public void initPopulation(int nb_inds,ArrayList<ArrayList<Integer>> adjDomain) {
 		population.clear();
-
-		while(population.size() < Configs.POPULATION_SIZE) {
+		while(population.size() < nb_inds) {
 			Individual i = new Individual();
-			i.randomInit(task.adjDomain);
+			i.randomInit(adjDomain);
 			i.updateFitness(task);
 			if(i.getFitness() > -Configs.MAX_VALUE) population.add(i);
 		}
@@ -34,6 +33,10 @@ public class Population {
 
 	public void setPopulation(ArrayList<Individual> population) {
 		this.population = population;
+	}
+	public Individual getRandomIndividual(){
+		int r = Configs.rd.nextInt(population.size());
+		return population.get(r);
 	}
 
 	public Individual getBestIndividual() {

@@ -38,7 +38,7 @@ public class Test {
 		int BF = Integer.MAX_VALUE;
 
 		int[] rs = new int[Configs.REPEAT];
-		
+		// System.out.println(dataPath);
 		for(int seed = 0; seed < Configs.REPEAT; seed++) {
 			Configs.rd.setSeed(seed);
 			Individual best = ga.run(seed);
@@ -47,6 +47,7 @@ public class Test {
 			rs[seed] = -best.getFitness();
 //			System.out.println("---------------------------------------");
 		}
+		System.out.println(dataPath);
 		double AVG = mean(rs);
 		double STD = std(rs, AVG);
 		String p = String.format("\t\t%d\t\t%.2f\t\t%.2f", BF, AVG, STD);
@@ -64,17 +65,19 @@ public class Test {
 			File folderOut = new File(out); 
 			folderOut.mkdir();
 			String dtPath = dataPath + "\\" + name + ".txt";
-
+			// System.out.println(out);
+			// System.out.println(dtPath);
 			solver(fw, dtPath, out, name);
+			// System.out.println(name);
 		}
 	}
 	
 	public static void main(String[] args) throws IOException {
 		System.out.println("Running...");
 		Configs.rd = new Random();
-		String dataPath = "D:\\Documents\\MSO Lab\\IDPC-NDU\\data";
-		String ouputPath = "D:\\Documents\\MSO Lab\\IDPC-NDU\\result_preprocess_pga";
-		String result = "D:\\Documents\\MSO Lab\\IDPC-NDU\\ketqua_test.txt";
+		String dataPath = "IDPC-NDU\\data";
+		String ouputPath = "IDPC-NDU\\result_preprocess_pga";
+		String result = "IDPC-NDU\\ketqua_test.txt";
 		FileWriter fw = new FileWriter(result);
 		fw.write("Instances\t\t\t\t\tBF\t\tAVG\t\t\tSTD\n");
 		File out = new File(ouputPath);
