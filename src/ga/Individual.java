@@ -8,6 +8,12 @@ import problem.IDPCNDU;
 
 public class Individual {
 	private ArrayList<NodeDepth> chromosome;
+	public int total_domain;
+	public int total_node;
+	public int total_edge;
+	public int domain;
+	public int node;
+	public int edge;
 	private int fitness;
 	private int skill_factor;
 	public Individual() {
@@ -128,7 +134,32 @@ public class Individual {
 	}
 	
 	// tra ve duong di lien mien
+		// public ArrayList<Integer> decode(IDPCNDU task) {
+		// 	ArrayList<Integer> path = new ArrayList<>();
 	
+		// 	// find the destination domain
+		// 	NodeDepth p = new NodeDepth(0, 0);
+		// 	int i;
+		// 	for(i = chromosome.size()-1; i >= 0; i--) {
+		// 		if(chromosome.get(i).getNode() == task.getNumberOfDomains()) {
+		// 			path.add(task.getNumberOfDomains());
+		// 			p = chromosome.get(i);
+		// 			break;
+		// 		}
+		// 	}
+		// 	// find the path from destination domain <-... <- source domain
+		// 	for(int j = i-1; j >= 0; j--) {
+		// 		if(chromosome.get(j).getDepth() < p.getDepth()) {
+		// 			p = chromosome.get(j);
+		// 			path.add(p.getNode());
+		// 		}
+		// 	}
+	
+		// 	// reverse: source domain -> ... -> destination domain
+		// 	Collections.reverse(path);
+	
+		// 	return path;
+		// }
 	public ArrayList<Integer> decode(IDPCNDU task) {
 		ArrayList<Integer> path = new ArrayList<>();
 		ArrayList<NodeDepth> u = new ArrayList<>();
@@ -141,10 +172,6 @@ public class Individual {
 		tree.add(u.get(0));
 		visited[0] = 1;
 		while(Arrays.stream(visited).sum() != u.size()){
-			// for(int idx = 0;idx<chromosome.size();idx++){
-			// 	System.out.print(visited[idx]+ " ");
-			// }
-			// System.out.println();
 			for(int j =1;j<u.size();j++){
 				if(visited[j] == 1)
 					continue;
@@ -166,11 +193,6 @@ public class Individual {
 
 			}
 		}
-		// if(task.getNumberOfDomains() == 10){
-		// 	System.out.println(tree);
-		// }
-		// find the destination domain
-		// tree = chromosome;
 		NodeDepth p = new NodeDepth(0, 0);
 		int i;
 		for(i = tree.size()-1; i >= 0; i--) {
@@ -206,15 +228,58 @@ public class Individual {
 		return minIndex;
 	}
 	
-	public int dijkstra(IDPCNDU task, ArrayList<Integer> path) {
+	private int[][] buildGraph(IDPCNDU task, ArrayList<Integer> path, ArrayList<Integer> listNodes) {
+		
+		int[][] distance = new int[task.getNumberOfNodes()+1][task.getNumberOfNodes()+1];
+		for(int i = 1; i <= task.getNumberOfNodes(); i++) {
+			Arrays.fill(distance[i], Configs.MAX_VALUE);
+			distance[i][i] = 0;
+		}
+		int edge = 0;
+		int node = 0;
+		for (int i = 0; i < path.size(); i++) {
+			
+			// build node in a domain
+			ArrayList<Integer> listBordersThis = task.getBorderNode().get(path.get(i));
+			node += listBordersThis.size();
+			// build edge in a domain
+			for (int j: listBordersThis) {
+				for (int k: listBordersThis) {
+					if (task.distance[j][k] != Configs.MAX_VALUE) {
+						distance[j][k] = task.distance[j][k];
+						edge++;
+					}
+				}
+			}
+			
+			// Build shortcut path
+			for (int j = i + 1; j < path.size(); j++) {
+				ArrayList<Integer> that = task.getBorderNode().get(path.get(j));
+				for (int x: listBordersThis) {
+					for (int y: that) {
+						if (task.distance[x][y] != Configs.MAX_VALUE) {
+							distance[x][y] = task.distance[x][y];
+						}
+					}
+				}
+			}
+		}
+		
+		this.total_edge = task.numberOfEdges;
+		this.domain = path.size();
+		this.node = node;
+		this.edge = edge;
+		
+		return distance;
+	}
+	
+	public int dijkstra(IDPCNDU task, ArrayList<Integer> path, int[][] distance) {
 		int[] dist = new int[task.getNumberOfNodes()+1]; // dist[i]: khoang cach tu s -> i
-		Arrays.fill(dist, Configs.MAX_VALUE); 
+		Arrays.fill(dist,Configs.MAX_VALUE);
 		boolean[] visited = new boolean[task.getNumberOfNodes()+1]; // visited[i] = true: da duyet qua i
 		Arrays.fill(visited, false);
 		
 		dist[task.getS()] = 0;
-		
-		int[][] distance = task.distance;
 		
 		// VD voi thu tu mien 1 -> 2 -> 3 -> 4, neu co canh noi truc tiep tu mien 1 den mien 4 -> van thoa man
 		while(true) {
@@ -245,11 +310,16 @@ public class Individual {
 		
 		ArrayList<Integer> listNodes = new ArrayList<>(); // list nodes in the virtual graph: bao gom tat ca cac node bien trong mien di qua
 		for(int d: path) {
-//			listNodes.addAll(task.borderNode.get(d));
-			listNodes.addAll(task.listDomain.get(d));
+			listNodes.addAll(task.borderNode.get(d)); // NDE
+//			listNodes.addAll(task.listDomain.get(d));
 		}
+
+		int[][] distance = buildGraph(task, path, listNodes);
+		// System.out.println(distance[task.getS()][task.getT()]);
+		int cost = dijkstra(task, listNodes, distance);
 		
-		int cost = dijkstra(task, listNodes);
+		this.total_domain = task.getNumberOfDomains();
+		this.total_node = task.getNumberOfNodes();
 		
 		this.setFitness(-cost);
 	}

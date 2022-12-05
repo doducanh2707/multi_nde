@@ -76,13 +76,13 @@ public class MFEA {
                 pop.get(i).setPopulation(imiPop);
                 pop.get(i).survivalSelection();
             }
-			System.out.print(String.format("Generation %d:\t",gen+1));
+			// System.out.print(String.format("Generation %d:\t",gen+1));
             for(int i=0 ;i < prob.getTASKS_NUM();i++){
-                System.out.print("Task " + i + ":" + -pop.get(i).getBestIndividual().getFitness() + " ");
+                // System.out.print("Task " + i + ":" + -pop.get(i).getBestIndividual().getFitness() + " ");
 				result[i] = -pop.get(i).getBestIndividual().getFitness();
 				mem_f[i][gen] = -pop.get(i).getBestIndividual().getFitness();
             }
-			System.out.println();
+			// System.out.println();
             gen++;
         }
 		return result;

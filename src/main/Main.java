@@ -56,7 +56,6 @@ public class Main {
                 // }
                 // System.out.println();
             }
-    
             for(int i=0;i<taskNum;i++){
                 String[] name = x[i].split("/");
                 String result =String.format("results\\%s.txt", name[1]);
@@ -82,33 +81,20 @@ public class Main {
                 if (!dir.exists()) {
                     dir.mkdir();
                 }
-                String fitnessFile = dirType + "/" + x[i].split("/")[2] + ".txt";
-                DataOutputStream outFit = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(fitnessFile)));
-                for (int r = 0; r < Configs.MAX_GENERATIONS; r++) {
-                    outFit.writeBytes("Generation "+(r + 1) + ", ");
-                    for (int seed = 0; seed < Configs.REPEAT; seed++) {
-                            if (seed < Configs.REPEAT - 1 || i < taskNum - 1) {
-                                outFit.writeBytes(String.format("%.6f", mem_f[seed][i][r]) + ", ");
-                            } else {
-                                outFit.writeBytes("" + String.format("%.6f", mem_f[seed][i][r]) + "\n");
-                            }
-                    }
-                }
-                outFit.close();
-    
-                String dirMean = dirType + "/Mean";
-                dir = new File(dirMean);
+                String name = x[i].split("/")[2].split("/")[0];
+                String benchmark = dirType + "/" + name.substring(0, name.lastIndexOf('.'));
+                dir = new File(benchmark);
                 if (!dir.exists()) {
                     dir.mkdir();
                 }
-    
-                String meanFile = dirMean + "/MTOSOO_P" + (i + 1) + ".txt";
-                DataOutputStream outMean = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(meanFile)));
-                for (int task = 0; task < taskNum; task++) {
-                    outMean.writeBytes("" + (task + 1) + ", " + String.format("%.6f", mean[task]) + "\n");
+                for(int seed = 0 ;seed < Configs.REPEAT;seed++){
+                    String fitnessFile = benchmark + "/Seed_" + seed + ".txt";
+                    DataOutputStream outFit = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(fitnessFile)));
+                    for(int r = 0 ; r < Configs.MAX_GENERATIONS;r++){
+                        outFit.writeBytes(String.format("Generation %d : %.6f",r+1, mem_f[seed][i][r]) + "\n");
+                    }
+                    outFit.close();
                 }
-                outMean.close();
-
             }
         }
     }
