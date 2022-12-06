@@ -11,7 +11,7 @@ import nde_ga.GA;
 import nde_ga.Individual;
 import problem.IDPCNDU;
 
-public class Test {
+public class Main_ndega {
 	
 	
 	public static double mean(int[] rs) {

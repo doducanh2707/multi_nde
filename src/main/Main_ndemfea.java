@@ -7,7 +7,7 @@ import nde_mfea.*;
 import problem.Problem;
 import problem.ProblemConstructor;
 
-public class Main {
+public class Main_ndemfea {
     public static double std(int[] rs, double mean) {
 		double s = 0;
 		for(int i=0; i < Configs.REPEAT; i++) {
