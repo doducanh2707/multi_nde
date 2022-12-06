@@ -1,19 +1,9 @@
 package main;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputFilter.Config;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
-
-import core.MFEA;
-import ga.Configs;
+import java.io.*;
+import java.util.*;
+// import nde_ga.*;
+import nde_mfea.*;
 import problem.Problem;
 import problem.ProblemConstructor;
 

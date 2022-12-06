@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import ga.Configs;
+import nde_ga.Configs;
 
 public class IDPCNDU {
 	private int numberOfNodes;

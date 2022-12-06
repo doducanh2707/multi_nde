@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
-import ga.Configs;
-import ga.GA;
-import ga.Individual;
+import nde_ga.Configs;
+import nde_ga.GA;
+import nde_ga.Individual;
 import problem.IDPCNDU;
 
 public class Test {

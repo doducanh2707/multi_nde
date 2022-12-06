@@ -1,4 +1,4 @@
-package ga;
+package nde_ga;
 
 import java.io.FileWriter;
 import java.io.IOException;

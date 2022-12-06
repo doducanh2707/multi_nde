@@ -1,4 +1,4 @@
-package ga;
+package nde_ga;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -134,85 +134,32 @@ public class Individual {
 	}
 	
 	// tra ve duong di lien mien
-		// public ArrayList<Integer> decode(IDPCNDU task) {
-		// 	ArrayList<Integer> path = new ArrayList<>();
+		public ArrayList<Integer> decode(IDPCNDU task) {
+			ArrayList<Integer> path = new ArrayList<>();
 	
-		// 	// find the destination domain
-		// 	NodeDepth p = new NodeDepth(0, 0);
-		// 	int i;
-		// 	for(i = chromosome.size()-1; i >= 0; i--) {
-		// 		if(chromosome.get(i).getNode() == task.getNumberOfDomains()) {
-		// 			path.add(task.getNumberOfDomains());
-		// 			p = chromosome.get(i);
-		// 			break;
-		// 		}
-		// 	}
-		// 	// find the path from destination domain <-... <- source domain
-		// 	for(int j = i-1; j >= 0; j--) {
-		// 		if(chromosome.get(j).getDepth() < p.getDepth()) {
-		// 			p = chromosome.get(j);
-		// 			path.add(p.getNode());
-		// 		}
-		// 	}
-	
-		// 	// reverse: source domain -> ... -> destination domain
-		// 	Collections.reverse(path);
-	
-		// 	return path;
-		// }
-	public ArrayList<Integer> decode(IDPCNDU task) {
-		ArrayList<Integer> path = new ArrayList<>();
-		ArrayList<NodeDepth> u = new ArrayList<>();
-		for(NodeDepth x : chromosome)
-			u.add(new NodeDepth(x));
-
-		ArrayList<NodeDepth> tree = new ArrayList<>();
-		int[] visited = new int[chromosome.size()];
-		Arrays.fill(visited, 0);
-		tree.add(u.get(0));
-		visited[0] = 1;
-		while(Arrays.stream(visited).sum() != u.size()){
-			for(int j =1;j<u.size();j++){
-				if(visited[j] == 1)
-					continue;
-				NodeDepth x = u.get(j);
-				if(x.getNode() > task.getNumberOfDomains()){
-					visited[j] =1;
-					continue;
+			// find the destination domain
+			NodeDepth p = new NodeDepth(0, 0);
+			int i;
+			for(i = chromosome.size()-1; i >= 0; i--) {
+				if(chromosome.get(i).getNode() == task.getNumberOfDomains()) {
+					path.add(task.getNumberOfDomains());
+					p = chromosome.get(i);
+					break;
 				}
-				for(int k = tree.size()-1;k>=0;k--){
-					NodeDepth y = tree.get(k);
-					if(y.getDepth() < x.getDepth() && task.adjDomain.get(y.getNode()).contains(x.getNode())){
-						tree.add(k+1,new NodeDepth(x.getNode(),y.getDepth()+1));
-						visited[j] = 1;
-						break;
-					}
+			}
+			// find the path from destination domain <-... <- source domain
+			for(int j = i-1; j >= 0; j--) {
+				if(chromosome.get(j).getDepth() < p.getDepth()) {
+					p = chromosome.get(j);
+					path.add(p.getNode());
 				}
-				if(visited[j] == 0)
-					u.get(j).setDepth(u.get(j).getDepth()+1);
-
 			}
+	
+			// reverse: source domain -> ... -> destination domain
+			Collections.reverse(path);
+	
+			return path;
 		}
-		NodeDepth p = new NodeDepth(0, 0);
-		int i;
-		for(i = tree.size()-1; i >= 0; i--) {
-			if(tree.get(i).getNode() == task.getNumberOfDomains()) {
-				path.add(task.getNumberOfDomains());
-				p = tree.get(i);
-				break;
-			}
-		}
-		for(int j = i-1; j >= 0; j--) {
-			if(tree.get(j).getDepth() < p.getDepth()) {
-				p = tree.get(j);
-				path.add(p.getNode());
-			}
-		}
-		// reverse: source domain -> ... -> destination domain
-		Collections.reverse(path);
-
-		return path;
-	}
 	
 	// tim node co khoang cach nho nhat de tham
 	private int minDistance(int[] dist, boolean[] visited, ArrayList<Integer> listNodes) {

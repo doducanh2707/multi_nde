@@ -1,7 +1,6 @@
-package core;
+package nde_mfea;
 import java.util.ArrayList;
 
-import ga.*;
 import problem.IDPCNDU;
 import problem.Problem;
 

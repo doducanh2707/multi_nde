@@ -1,4 +1,4 @@
-package ga;
+package nde_mfea;
 
 public class Edge {
 	private int node1;

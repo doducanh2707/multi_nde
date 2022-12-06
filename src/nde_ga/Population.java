@@ -1,4 +1,4 @@
-package ga;
+package nde_ga;
 
 import java.util.ArrayList;
 import java.util.Collections;
