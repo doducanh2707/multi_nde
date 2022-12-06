@@ -1,7 +1,6 @@
 package nde_mfea;
 import java.util.ArrayList;
 
-import problem.IDPCNDU;
 import problem.Problem;
 
 public class MFEA {

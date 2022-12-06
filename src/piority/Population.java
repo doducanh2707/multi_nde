@@ -1,4 +1,4 @@
-package nde_mfea;
+package piority;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +21,7 @@ public class Population {
 		population.clear();
 		while(population.size() < nb_inds) {
 			Individual i = new Individual();
-			i.randomInit(adjDomain);
+			i.randomInit(adjDomain.size()-1);
 			i.updateFitness(task);
 			if(i.getFitness() > -Configs.MAX_VALUE) population.add(i);
 		}
@@ -68,6 +68,7 @@ public class Population {
 		}
 	}
 
+	// Edge Permutation Operatio
 	public void survivalSelection() {
 		Collections.sort(this.population, new Comparator<Individual>() {
 			@Override
@@ -85,3 +86,4 @@ public class Population {
 		this.setBestIndividual(population.get(0));
 	}
 }
+

@@ -1,6 +1,8 @@
 package main;
 
 import java.io.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 // import nde_ga.*;
 import nde_mfea.*;
@@ -20,6 +22,7 @@ public class Main_ndemfea {
         File f = new File("data_ndu/Pairing.txt");
         Scanner s = new Scanner(f);
         while(s.hasNextLine()){
+            long t1 = System.currentTimeMillis();
             String[] x = s.nextLine().split(" ");
             Problem prob= ProblemConstructor.getPairInstances(x[0],x[1]);
             int taskNum = prob.getTASKS_NUM();
@@ -46,21 +49,23 @@ public class Main_ndemfea {
                 // }
                 // System.out.println();
             }
+            long t2 = System.currentTimeMillis();
+            NumberFormat formatter = new DecimalFormat("#0.00000");
             for(int i=0;i<taskNum;i++){
                 String[] name = x[i].split("/");
-                String result =String.format("results\\%s.txt", name[1]);
+                String result =String.format("results\\nde_mfea\\%s.txt", name[1]);
                 FileWriter fw = new FileWriter(result,true);
                 int BF = best[i];
                 double AVG = mean[i];
                 double STD = std(history[i], AVG);
-                String p = String.format("\t\t%d\t\t%.2f\t\t%.2f", BF, AVG, STD);
+                String p = String.format("\t%d\t%.2f\t%.2f\t%s", BF, AVG, STD, formatter.format((t2 - t1) /(double) Configs.REPEAT /1000d ));
                 String s_name = name[2].substring(0, name[2].lastIndexOf('.'));
                 fw.write(s_name + p +"\n");
                 fw.flush();
                 fw.close();
             }
             // print results
-            String rootFolder = "results/";
+            String rootFolder = "results/nde_mfea/";
             File dir = new File(rootFolder);
             if (!dir.exists()) {
                 dir.mkdir();
@@ -87,5 +92,6 @@ public class Main_ndemfea {
                 }
             }
         }
+        s.close();
     }
 }
