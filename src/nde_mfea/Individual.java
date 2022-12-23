@@ -38,6 +38,7 @@ public class Individual {
 		
 		this.chromosome = copyChromosome;
 		this.fitness = i.fitness;
+		this.skill_factor = i.skill_factor;
 	}
 
 
@@ -235,6 +236,7 @@ public class Individual {
 			Arrays.fill(distance[i], Configs.MAX_VALUE);
 			distance[i][i] = 0;
 		}
+		
 		int edge = 0;
 		int node = 0;
 		for (int i = 0; i < path.size(); i++) {
@@ -242,6 +244,7 @@ public class Individual {
 			// build node in a domain
 			ArrayList<Integer> listBordersThis = task.getBorderNode().get(path.get(i));
 			node += listBordersThis.size();
+			
 			// build edge in a domain
 			for (int j: listBordersThis) {
 				for (int k: listBordersThis) {
@@ -259,6 +262,17 @@ public class Individual {
 					for (int y: that) {
 						if (task.distance[x][y] != Configs.MAX_VALUE) {
 							distance[x][y] = task.distance[x][y];
+						}
+					}
+				}
+			}
+			
+			if (i < path.size()-1) {
+				ArrayList<Integer> listBordersThat = task.getBorderNode().get(path.get(i+1));
+				for (int j: listBordersThis) {
+					for (int k: listBordersThat) {
+						if (task.distance[j][k] != Configs.MAX_VALUE) {
+							distance[j][k] = task.distance[j][k];
 						}
 					}
 				}
